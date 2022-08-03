@@ -53,8 +53,18 @@ sysinfo.txt
 
 # Builds
 *.apk
+*.aab
 *.unitypackage
+*.app
+
 
 # Crashlytics generated file
 crashlytics-build.properties
+
+# Windows
+Thumbs.db
+Thumbs.db.meta
+
+# Packed Addressables
+/[Aa]ssets/[Aa]ddressable[Aa]ssets[Dd]ata/*/*.bin*
 
