@@ -5,15 +5,16 @@ using UnityEngine;
 public class PlayerController : MonoBehaviour
 {
     Rigidbody2D rb;
+    Vector2 direction;
+    bool playerIsGrounded = false;
+    [SerializeField] float walkingSpeed;
+    [SerializeField] float jumpStrength;
     // Start is called before the first frame update
     void Start()
     {
         rb = GetComponent<Rigidbody2D>();
     }
-
-    /// <summary>
-    /// This function is called every fixed framerate frame, if the MonoBehaviour is enabled.
-    /// </summary>
+    
     void FixedUpdate()
     {
         
@@ -22,13 +23,24 @@ public class PlayerController : MonoBehaviour
     // Update is called once per frame
     void Update()
     {
-        if (Input.GetButtonDown("Jump")){
-            rb.AddForce(new Vector2(0f, 10f), ForceMode2D.Impulse);
-        } if (Input.GetButtonDown("Horizontal") && Input.GetAxisRaw("Horizontal") > 0) {
-            rb.AddForce(new Vector2(5f, 0f), ForceMode2D.Impulse);
+        if (Input.GetButton("Jump")&&playerIsGrounded){
+            direction = new Vector2(0f, 2f);
+            rb.AddForce(direction*jumpStrength, ForceMode2D.Impulse);
+            playerIsGrounded = false;
+        } if (Input.GetButton("Horizontal")) {
+            direction = new Vector2(1f, 0f);
+            rb.AddForce(direction*walkingSpeed*Input.GetAxisRaw("Horizontal"), ForceMode2D.Impulse);
         } 
-        else if (Input.GetButtonDown("Horizontal") && Input.GetAxisRaw("Horizontal") < 0) {
-            rb.AddForce(new Vector2(-5f, 0f), ForceMode2D.Impulse);
-        }
+    }
+
+    void OnCollisionEnter2D(Collision2D other)
+    {
+        if(other.gameObject.tag == "Ground")
+        playerIsGrounded = true;
+    }
+    void OnCollisionExit2D(Collision2D other)
+    {
+        if(other.gameObject.tag == "Ground")
+        playerIsGrounded = false;
     }
 }
